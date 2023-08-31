@@ -4,6 +4,7 @@ import com.springboot.blog.dto.PostDto;
 import com.springboot.blog.dto.PostResponse;
 import com.springboot.blog.entity.Post;
 import com.springboot.blog.service.PostService;
+import com.springboot.blog.utils.AppConstants;
 
 import java.util.List;
 
@@ -45,10 +46,10 @@ public class PostController {
 
   @GetMapping("/paginate")
   public ResponseEntity<PostResponse> getPostsPagination(
-      @RequestParam(value = "size", defaultValue = "5", required = false) int size,
-      @RequestParam(value = "page", defaultValue = "0", required = false) int page,
-      @RequestParam(value = "sortBy", defaultValue = "id", required = false) String sortBy,
-      @RequestParam(value = "sortOrder", defaultValue = "asc", required = false) String sortOrder) {
+      @RequestParam(value = "size", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int size,
+      @RequestParam(value = "page", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int page,
+      @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_FIELD, required = false) String sortBy,
+      @RequestParam(value = "sortOrder", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortOrder) {
     return new ResponseEntity<>(postService.getPostPagination(size, page, sortBy, sortOrder), HttpStatus.OK);
   }
 

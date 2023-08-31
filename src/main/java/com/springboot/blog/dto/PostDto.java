@@ -1,13 +1,11 @@
 package com.springboot.blog.dto;
 
-
 import lombok.Data;
-import org.springframework.http.HttpStatusCode;
 
 @Data
 public class PostDto {
-  long id;
-  String title;
-  String description;
-  String content;
+  private long id;
+  private String title;
+  private String description;
+  private String content;
 }
