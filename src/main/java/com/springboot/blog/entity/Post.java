@@ -1,6 +1,7 @@
 package com.springboot.blog.entity;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,6 +30,6 @@ public class Post {
   @CreationTimestamp
   private Date createdDate;
 
-//  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-//  private List<Comment> comments;
+  @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Comment> comments = new ArrayList<>();
 }
