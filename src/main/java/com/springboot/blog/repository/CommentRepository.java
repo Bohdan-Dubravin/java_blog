@@ -10,6 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-  @Query(value = "SELECT * FROM comments WHERE post_id = :postId", nativeQuery = true)
+  @Query(value = "SELECT id, name, email, body, post_id, created_date FROM comments WHERE post_id = :postId", nativeQuery = true)
   List<Comment> findByPostId(long postId);
 }

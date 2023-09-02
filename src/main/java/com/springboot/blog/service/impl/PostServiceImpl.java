@@ -2,13 +2,19 @@ package com.springboot.blog.service.impl;
 
 import com.springboot.blog.dto.PostDto;
 import com.springboot.blog.dto.PostResponse;
+import com.springboot.blog.entity.Comment;
 import com.springboot.blog.entity.Post;
 import com.springboot.blog.exception.ResourceNotFoundException;
+import com.springboot.blog.repository.CommentRepository;
 import com.springboot.blog.repository.PostRepository;
 import com.springboot.blog.service.PostService;
 
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +24,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class PostServiceImpl implements PostService {
 
+
+  @Autowired
+  private CommentRepository commentRepository;
+  @Autowired
   private PostRepository postRepository;
 
-  public PostServiceImpl(PostRepository postRepository) {
-    this.postRepository = postRepository;
-  }
 
   @Override
   public PostDto createPost(PostDto postDto) {
@@ -48,12 +55,19 @@ public class PostServiceImpl implements PostService {
 
   @Override
   public Post getPostWithId(long postId) {
-    Post foundPost = postRepository.getPostWithID(postId);
-
+    Post foundPost = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", String.valueOf(postId)));
+    System.out.println(foundPost);
     if (foundPost == null) {
       throw new ResourceNotFoundException("Post", "id", String.valueOf(postId));
     }
-
+//
+//    List<Comment> postComments = commentRepository.findByPostId(postId);
+//
+//    if (postComments != null) {
+//      Set<Comment> set2 = new HashSet<>(postComments);
+//      System.out.println(set2);
+//      foundPost.setComments(set2);
+//    }
     return foundPost;
   }
 
@@ -86,7 +100,7 @@ public class PostServiceImpl implements PostService {
   public PostResponse getPostPagination(int size, int startFrom, String sortBy, String sortOrder) {
     int pageSize = size > 0 ? size : 1;
     Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
-        : Sort.by(sortBy).descending();
+            : Sort.by(sortBy).descending();
     Pageable pageable = PageRequest.of(startFrom, pageSize, sort);
     Page<Post> posts = postRepository.findAll(pageable);
     PostResponse postResponse = new PostResponse();

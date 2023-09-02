@@ -19,14 +19,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   @Query(value = "SELECT * FROM posts WHERE id = :postId", nativeQuery = true)
   public Post getPostWithID(long postId);
 
+  @Query("SELECT p FROM Post p  WHERE p.id = :postId")
+  Post findPostWithComments(@Param("postId") Long postId);
+
   @Query(value = "SELECT * FROM posts ORDER BY :sortBy", nativeQuery = true)
   List<Post> getPostsPagination(
-      String sortBy);
+          String sortBy);
 
   @Modifying
   @Query(value = "update Posts p set p.title = :title, p.description = :description, p.content = :content where p.id = :postId", nativeQuery = true)
   public void updatePostById(@Param("postId") long postId, @Param("title") String title,
-      @Param("description") String description, @Param("content") String content);
+                             @Param("description") String description, @Param("content") String content);
 
   @Modifying
   @Query(value = "delete from Posts p where p.id = :postId", nativeQuery = true)

@@ -37,7 +37,7 @@ public class Comment {
   private Date createdDate;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "post_id", nullable = false)
+  @JoinColumn(name = "post_id", nullable = false, referencedColumnName = "id")
   private Post post;
 
 }
