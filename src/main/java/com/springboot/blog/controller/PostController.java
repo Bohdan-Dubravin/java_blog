@@ -6,6 +6,8 @@ import com.springboot.blog.entity.Post;
 import com.springboot.blog.service.PostService;
 import com.springboot.blog.utils.AppConstants;
 
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class PostController {
   private PostService postService;
 
   @PostMapping
-  public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+  public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
     return new ResponseEntity<>(postService.createPost(postDto), HttpStatus.CREATED);
 
   }
