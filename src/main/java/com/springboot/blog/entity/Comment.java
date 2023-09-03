@@ -3,6 +3,7 @@ package com.springboot.blog.entity;
 import java.time.Instant;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -36,8 +37,10 @@ public class Comment {
   @CreationTimestamp
   private Date createdDate;
 
-  @ManyToOne
-  @JoinColumn(name = "post_id", nullable = false)
+
+  @JsonBackReference
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "post_id", nullable = true)
   private Post post;
 
 }

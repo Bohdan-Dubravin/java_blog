@@ -3,18 +3,19 @@ package com.springboot.blog.entity;
 
 import java.util.Date;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -30,6 +31,8 @@ public class Post {
   @CreationTimestamp
   private Date createdDate;
 
+  @JsonManagedReference
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private Set<Comment> comments;
+  private Set<Comment> comments = new HashSet<>();
+
 }

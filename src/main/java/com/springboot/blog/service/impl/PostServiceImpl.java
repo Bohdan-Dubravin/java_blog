@@ -64,11 +64,11 @@ public class PostServiceImpl implements PostService {
       throw new ResourceNotFoundException("Post", "id", String.valueOf(postId));
     }
 
-    Set<Comment> postComments = commentService.findCommentByPostId(postId).stream().map((com) -> commentService.mapToEntity(com)).collect(Collectors.toSet());
-
-    if (postComments != null) {
-      foundPost.setComments(postComments);
-    }
+//    Set<Comment> postComments = commentService.findCommentByPostId(postId).stream().map((com) -> commentService.mapToEntity(com)).collect(Collectors.toSet());
+//
+//    if (postComments != null) {
+//      foundPost.setComments(postComments);
+//    }
     return foundPost;
   }
 

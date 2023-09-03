@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ public class CommentServiceImpl implements CommentService {
   private CommentRepository commentRepository;
   @Autowired
   private PostRepository postRepository;
+  @Autowired
+  private ModelMapper mapper;
 
   @Override
   public CommentDto createComment(long postId, CommentDto commentDto) {
@@ -38,23 +41,12 @@ public class CommentServiceImpl implements CommentService {
   }
 
   private CommentDto mapToDto(Comment comment) {
-    CommentDto commentDto = new CommentDto();
-    commentDto.setId(comment.getId());
-    commentDto.setName(comment.getName());
-    commentDto.setEmail(comment.getEmail());
-    commentDto.setBody(comment.getBody());
-    commentDto.setCreatedDate(comment.getCreatedDate());
-    return commentDto;
+    return mapper.map(comment, CommentDto.class);
+
   }
 
   public Comment mapToEntity(CommentDto commentDto) {
-    Comment comment = new Comment();
-    comment.setId(commentDto.getId());
-    comment.setName(commentDto.getName());
-    comment.setEmail(commentDto.getEmail());
-    comment.setBody(commentDto.getBody());
-    comment.setCreatedDate(commentDto.getCreatedDate());
-    return comment;
+    return mapper.map(commentDto, Comment.class);
   }
 
   @Override
