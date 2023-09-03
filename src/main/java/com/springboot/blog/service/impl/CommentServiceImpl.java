@@ -1,5 +1,6 @@
 package com.springboot.blog.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
   public CommentDto createComment(long postId, CommentDto commentDto) {
     Comment comment = mapToEntity(commentDto);
     Post post = postRepository.findById(postId)
-        .orElseThrow(() -> new ResourceNotFoundException("Post", "id", String.valueOf(postId)));
+            .orElseThrow(() -> new ResourceNotFoundException("Post", "id", String.valueOf(postId)));
 
     comment.setPost(post);
 
@@ -46,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
     return commentDto;
   }
 
-  private Comment mapToEntity(CommentDto commentDto) {
+  public Comment mapToEntity(CommentDto commentDto) {
     Comment comment = new Comment();
     comment.setId(commentDto.getId());
     comment.setName(commentDto.getName());
@@ -57,17 +58,37 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<CommentDto> findByPostId(long postId) {
+  public List<CommentDto> findCommentByPostId(long postId) {
 
     List<Comment> comments = commentRepository.findByPostId(postId);
 
     if (comments.isEmpty()) {
-      throw new ResourceNotFoundException("Comments", "post_id", String.valueOf(postId));
+      return new ArrayList<>();
     }
 
     List<CommentDto> commentsList = comments.stream().map((comment) -> mapToDto(comment)).collect(Collectors.toList());
 
     return commentsList;
+  }
+
+  @Override
+  public CommentDto updateCommentById(long commentId, CommentDto commentRequest) {
+    Comment oldComment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", String.valueOf(commentId)));
+    oldComment.setName(commentRequest.getName());
+    oldComment.setBody(commentRequest.getBody());
+    commentRequest.setEmail(commentRequest.getEmail());
+
+    commentRepository.save(oldComment);
+
+    return mapToDto(oldComment);
+  }
+
+  @Override
+  public String deleteCommentById(long commentId) {
+    commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment", "id", String.valueOf(commentId)));
+
+    commentRepository.deleteById(commentId);
+    return "Comment with id: " + commentId + " deleted";
   }
 
 }

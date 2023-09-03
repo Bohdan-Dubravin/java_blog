@@ -1,5 +1,6 @@
 package com.springboot.blog.service.impl;
 
+import com.springboot.blog.dto.CommentDto;
 import com.springboot.blog.dto.PostDto;
 import com.springboot.blog.dto.PostResponse;
 import com.springboot.blog.entity.Comment;
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,8 @@ public class PostServiceImpl implements PostService {
   @Autowired
   private PostRepository postRepository;
 
+  @Autowired
+  private CommentServiceImpl commentService;
 
   @Override
   public PostDto createPost(PostDto postDto) {
@@ -56,18 +60,15 @@ public class PostServiceImpl implements PostService {
   @Override
   public Post getPostWithId(long postId) {
     Post foundPost = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "id", String.valueOf(postId)));
-    System.out.println(foundPost);
     if (foundPost == null) {
       throw new ResourceNotFoundException("Post", "id", String.valueOf(postId));
     }
-//
-//    List<Comment> postComments = commentRepository.findByPostId(postId);
-//
-//    if (postComments != null) {
-//      Set<Comment> set2 = new HashSet<>(postComments);
-//      System.out.println(set2);
-//      foundPost.setComments(set2);
-//    }
+
+    Set<Comment> postComments = commentService.findCommentByPostId(postId).stream().map((com) -> commentService.mapToEntity(com)).collect(Collectors.toSet());
+
+    if (postComments != null) {
+      foundPost.setComments(postComments);
+    }
     return foundPost;
   }
 

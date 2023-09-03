@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.springboot.blog.dto.CommentDto;
 import com.springboot.blog.entity.Comment;
@@ -25,12 +21,23 @@ public class CommentController {
 
   @PostMapping("/posts/{postId}/comments")
   public ResponseEntity<CommentDto> createComment(@PathVariable("postId") long postId,
-      @RequestBody CommentDto commentDto) {
+                                                  @RequestBody CommentDto commentDto) {
     return new ResponseEntity<>(commentService.createComment(postId, commentDto), HttpStatus.CREATED);
   }
 
   @GetMapping("/posts/{postId}/comments")
   public ResponseEntity<List<CommentDto>> getPostWithComments(@PathVariable("postId") long postId) {
-    return new ResponseEntity<>(commentService.findByPostId(postId), HttpStatus.OK);
+    return new ResponseEntity<>(commentService.findCommentByPostId(postId), HttpStatus.OK);
+  }
+
+  @PutMapping("/comments/{commentId}")
+  public ResponseEntity<CommentDto> updateComment(@PathVariable("commentId") long commentId,
+                                                  @RequestBody CommentDto commentDto) {
+    return new ResponseEntity<>(commentService.updateCommentById(commentId, commentDto), HttpStatus.OK);
+  }
+
+  @DeleteMapping("/comments/{commentId}")
+  public ResponseEntity<String> deleteComment(@PathVariable("commentId") long commentId) {
+    return new ResponseEntity<>(commentService.deleteCommentById(commentId), HttpStatus.OK);
   }
 }

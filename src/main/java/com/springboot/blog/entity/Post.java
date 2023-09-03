@@ -1,9 +1,9 @@
 package com.springboot.blog.entity;
 
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
+import java.util.Set;
 
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,5 +31,5 @@ public class Post {
   private Date createdDate;
 
   @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<Comment> comments = new ArrayList<>();
+  private Set<Comment> comments;
 }
